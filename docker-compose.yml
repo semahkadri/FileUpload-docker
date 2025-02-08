@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./file-upload-backend
+    container_name: file-upload-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./file-upload-backend:/app
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./file-upload-frontend
+    container_name: file-upload-frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./file-upload-frontend:/app
+    depends_on:
+      - backend
+
+  db:
+    image: postgres:13
+    container_name: file-upload-db
+    environment:
+      POSTGRES_DB: fileupload
+      POSTGRES_USER: fileuploaduser
+      POSTGRES_PASSWORD: fileuploadpassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
